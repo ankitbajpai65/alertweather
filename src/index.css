@@ -1,13 +1,84 @@
-body {
+*{
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing: border-box;
 }
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.mainDiv{
+  /* border:2px solid purple; */
+  height: 100vh;
+  background: rgb(142, 221, 255);
+}
+.innerDiv{
+  background-color: #fff6d3;
+  width:27rem;
+  height:30rem;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 15px;
+}
+.night{
+  background-image: url('images/night-bg.jpg');
+  /* background-image: url('images/night-bg2.jpg'); */
+  background-repeat:no-repeat;
+  background-position:left;
+  background-size: cover;
+  color:white;
+}
+.cloud{
+  background-image: url('images/cloud-bg.jpg');
+  background-repeat:no-repeat;
+  background-position:left;
+  background-size: cover;
+  color:white;
+}
+.sun{
+  background-image: url('images/sun-bg.jpg');
+  /* background-image: url('images/sun-bg2.jpg'); */
+  background-repeat:no-repeat;
+  background-position:left;
+  background-size: cover;
+  color:white;
+}
+.rain{
+  background-image: url('images/rain-bg.jpg');
+  background-repeat:no-repeat;
+  background-position:left;
+  background-size: cover;
+  color:white;
+}
+.snow{
+  background-image: url('images/snow-bg.jpg');
+  background-repeat:no-repeat;
+  background-position:left;
+  background-size: cover;
+  color:white;
+}
+.thunder{
+  background-image: url('images/thunder-bg.jpg');
+  background-repeat:no-repeat;
+  background-position:left;
+  background-size: cover;
+  color:white;
+}
+.info{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.weatherImg{
+  /* border:2px solid red; */
+  height: 10rem;
+  width: 11rem;
+  /* z-index:2; */
+}
+.moonImg{
+  /* border:2px solid red; */
+  height:8rem;
+  width:9rem;
+  margin:1rem;
+}
+.errorImg{
+  height:19rem;
+  width:22rem;
 }
