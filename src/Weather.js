@@ -21,13 +21,13 @@ const Weather = () => {
     useEffect(() => {
         const fetchApi = async () => {
             const key = process.env.REACT_APP_API_KEY;
-            const url = `http://api.openweathermap.org/data/2.5/weather?q=${input}&units=metric&appid=${key}`;
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${input}&units=metric&appid=${key}`;
             const response = await fetch(url);
 
             const res = await response.json();
-            // console.log(res);
-            // console.log(res.main);
-            // console.log(res.weather);
+            console.log(res);
+            console.log(res.main);
+            console.log(res.weather);
             setLoc(res.main);
             setWeatherType(res.weather[0].main);
 
