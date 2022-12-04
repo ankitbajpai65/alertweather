@@ -9,9 +9,11 @@ import Snow from './Snow';
 import Thunder from './Thunder';
 
 const Weather = () => {
-    const [loc, setLoc] = useState(null);
-    const [weatherType, setWeatherType] = useState(null);
+    // whatever user type is going to save in input
     const [input, setInput] = useState();
+    const [data, setData] = useState(null);    // api data is stored in data
+
+    const [weatherType, setWeatherType] = useState(null); // for changing the img as per the weather  
     const [actualTime, setActualTime] = useState();
 
     let hour = new Date().getHours();
@@ -19,6 +21,7 @@ const Weather = () => {
     let time = hour + min / 100;
     // console.log(`time = ${time}`);
     useEffect(() => {
+        console.log('************************************');
         const fetchApi = async () => {
             const key = process.env.REACT_APP_API_KEY;
             const url = `https://api.openweathermap.org/data/2.5/weather?q=${input}&units=metric&appid=${key}`;
@@ -26,49 +29,86 @@ const Weather = () => {
 
             const res = await response.json();
             console.log(res);
-            console.log(res.main);
-            console.log(res.weather);
-            setLoc(res.main);
+            // console.log(res.weather[0].main);
+            setData(res.main);
             setWeatherType(res.weather[0].main);
 
-            let tzone = (res.timezone) / 3600;
-            // console.log(`timezone in hr = ${tzone}`);
-            let gap = (tzone - 5.5);
-            // console.log(`gap = ${gap}`);
 
-            // console.log(`time in india = ${time}`);
-            let x;
-            if (gap >= 0) {
-                if (Number.isInteger(gap))
-                    x = time + gap;
-                else {
-                    x = time + (Math.trunc(gap) + 0.30);
+            console.log(`time in india= ${time}`);
+
+            // EXXPERIMENT STARTS
+            console.log(res.timezone);
+            let tzone = (res.timezone) / 3600;
+            console.log(`tzone = ${tzone}`);
+            let realTime;
+            // RIGHT OF INDIA
+
+            if (tzone >= 5.5) {
+                let diff = tzone - 5.50;
+                console.log('diff = ' + diff);
+                if (diff - Math.trunc(diff) == .5)
+                    diff = Math.trunc(diff) + 0.30;
+                console.log('diff = ' + diff);
+
+                realTime = time + diff;
+                console.log(realTime - Math.trunc(realTime));
+                if (realTime - Math.trunc(realTime) > .59) {
+                    realTime++;
+                    realTime = realTime - .60;
                 }
-                if (x >= 24)
-                    x = x - 24;
-                let decimal = x - Math.trunc(x);
-                if (decimal > .59) {
-                    x = Math.trunc(x) + 1 + decimal;
+                if (realTime > 24)
+                    realTime -= 24;
+
+                console.log(`time in ${input} is ${realTime.toFixed(2)}`);
+            }
+
+            // LEFT OF INDIA
+
+            else if (tzone >= 0 && tzone < 5.5) {
+                let diff = 5.50 - tzone;
+                console.log('diff = ' + diff);
+                if (diff - Math.trunc(diff) == .5)
+                    diff = Math.trunc(diff) + 0.30;
+                console.log('diff = ' + diff);
+
+                realTime = time - diff;
+                console.log(realTime - Math.trunc(realTime));
+                if (realTime - Math.trunc(realTime) > .59) {
+                    realTime = realTime - .40;
+                    // realTime--;
                 }
-                // console.log(`actualTime = ${actualTime}`);
+                if (realTime < 0) {  // after 00:00
+                    realTime += 11.6;
+                    if (realTime - Math.trunc(realTime) > .59) {
+                        realTime++;
+                        realTime = realTime - .60;
+                    }
+                }
+                console.log(`time in ${input} is ${realTime}`);
             }
             else {
-                if (Number.isInteger(gap))
-                    x = time + gap;
-                else {
-                    x = time - (-((Math.trunc(gap) - .30)));
-                    // console.log(-(Math.trunc(gap) - 0.3));
+                let diff = 5.50 - tzone;
+                console.log('diff = ' + diff);
+                if (diff - Math.trunc(diff) == .5)
+                    diff = Math.trunc(diff) + 0.30;
+                console.log('diff = ' + diff);
+
+                realTime = time - diff;
+                console.log(realTime - Math.trunc(realTime));
+                if (realTime - Math.trunc(realTime) > .59) {
+                    // realTime--;
+                    realTime = realTime - .40;
                 }
-                if (x >= 24)
-                    x = x - 24;
-                let decimal = x - Math.trunc(x);
-                if (decimal > .59) {
-                    x = Math.trunc(x) + 1 + decimal;
+                if (realTime < 0) {  // after 00:00
+                    realTime += 24;
                 }
-                // console.log(`actualTime = ${actualTime}`);
+                console.log(`time in ${input} is ${realTime}`);
             }
-            setActualTime(Math.abs(x.toFixed(2)));
-            console.clear();
+            setActualTime(realTime.toFixed(2));
+
+            // EXPERIMENT ENDS
+
+            // console.clear();
         }
         fetchApi();
     }, [input]);
@@ -84,7 +124,7 @@ const Weather = () => {
                         }} />
                     </div>
 
-                    {!loc ?
+                    {!data ?
                         (<div className="info">
                             <p className="mt-4 display-6">No data found 😥</p>
                             <img src={require("./images/error2.png")} alt="error" className="errorImg" />
@@ -106,11 +146,11 @@ const Weather = () => {
                                     )
                                 }
                                 <h1 className="display-5 fw-bolder">
-                                    <LocationOnIcon className="fs-1 mb-1 me-2 text-primary" />
+                                    <LocationOnIcon className="text-white fs-2 mb-1 me-2 text-primary" />
                                     {input.charAt(0).toUpperCase() + input.slice(1)}</h1>
-                                <h2 className="fw-bolder mb-4">{loc.temp}℃</h2>
-                                <p>{`Max temp = ${loc.temp_max}℃ | Min temp = ${loc.temp_min}℃`}</p>
-                                <p>{`Humidity = ${loc.humidity} | Pressure = ${loc.pressure}`}</p>
+                                <h2 className="fw-bolder mb-4">{data.temp}℃</h2>
+                                <p>{`Max temp = ${data.temp_max}℃ | Min temp = ${data.temp_min}℃`}</p>
+                                <p>{`Humidity = ${data.humidity} | Pressure = ${data.pressure}`}</p>
                             </div>
                         )}
 
@@ -121,4 +161,4 @@ const Weather = () => {
     )
 }
 
-export default Weather
+export default Weather;
