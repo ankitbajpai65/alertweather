@@ -1,6 +1,6 @@
 {
   "name": "weather_app",
-  "homepage": "https://ankitbajpai65.github.io/weatherinfo",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
